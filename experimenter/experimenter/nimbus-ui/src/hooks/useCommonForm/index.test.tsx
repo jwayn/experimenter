@@ -102,7 +102,7 @@ describe("hooks/useCommonForm", () => {
           // TODO EXP-805 test errors form saving once
           // documentationLinks uses useCommonForm
           if (
-            !["application", "documentationLinks", "localizedContent"].includes(
+            !["application", "documentationLinks", "localizations"].includes(
               name,
             )
           ) {
@@ -130,7 +130,7 @@ describe("hooks/useCommonForm", () => {
               "riskPartnerRelated",
               "projects",
               "isLocalized",
-              "localizedContent",
+              "localizations",
             ].includes(name)
           ) {
             expect(

@@ -203,7 +203,7 @@ class NimbusExperimentSerializer(serializers.ModelSerializer):
 
     def get_localizations(self, obj):
         if obj.is_localized:
-            return json.loads(obj.localized_content)
+            return json.loads(obj.localizations)
 
     def to_representation(self, obj):
         result = super().to_representation(obj)

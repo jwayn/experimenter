@@ -343,6 +343,7 @@ class NimbusConstants(object):
     EMAIL_ENROLLMENT_END_SUBJECT = "Action required: Please end experiment enrollment"
 
     LANGUAGES_APPLICATION_SUPPORTED_VERSION = {
+        Application.DESKTOP: Version.FIREFOX_113,
         Application.FENIX: Version.FIREFOX_102,
         Application.FOCUS_ANDROID: Version.FIREFOX_102,
         Application.IOS: Version.FIREFOX_101,
@@ -415,6 +416,9 @@ Optional - We believe this outcome will <describe impact> on <core metric>
         If this rollout is launched, a client meeting the advanced targeting criteria \
         will be enrolled in one and not the other and \
         you will not be able to adjust the sizing for this rollout."
+    
+    ERROR_DESKTOP_LOCALIZATION_VERSION_MIN = "Firefox version must not be < 113 for \
+        localized experiments."
 
     # Analysis can be computed starting the week after enrollment
     # completion for "week 1" of the experiment. However, an extra

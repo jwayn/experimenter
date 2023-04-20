@@ -182,10 +182,10 @@ const TableOverview = ({ experiment }: TableOverviewProps) => {
               </td>
             </tr>
 
-            {experiment.isLocalized && experiment.localizedContent && (
+            {experiment.isLocalized && experiment.localizations && (
               <tr id="localization">
                 <th>
-                  Localized Content <a href={`#localized-content`}>#</a>
+                  Localizations <a href={`#localized-content`}>#</a>
                 </th>
                 <td colSpan={3} data-testid="experiment-localized-content">
                   <Accordion>
@@ -220,11 +220,7 @@ const TableOverview = ({ experiment }: TableOverviewProps) => {
                             </Button>
                           </div>
                           <Code
-                            codeString={
-                              JSON.stringify(
-                                experiment?.localizedContent,
-                              ).substring(0, 30) + "\n    ..."
-                            }
+                            codeString={experiment.localizations.substring(0, 30) + "\n    ..."}
                           />
                         </>
                       )}
@@ -232,7 +228,7 @@ const TableOverview = ({ experiment }: TableOverviewProps) => {
 
                     <Accordion.Collapse eventKey="0">
                       <Code
-                        codeString={experiment?.localizedContent as string}
+                        codeString={experiment.localizations}
                       />
                     </Accordion.Collapse>
                   </Accordion>

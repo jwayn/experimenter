@@ -62,7 +62,7 @@ class ExperimentInput(graphene.InputObjectType):
     is_sticky = graphene.Boolean()
     languages = graphene.List(graphene.String)
     locales = graphene.List(graphene.String)
-    localized_content = graphene.String()
+    localizations = graphene.String()
     name = graphene.String()
     population_percent = graphene.String()
     prevent_pref_conflicts = graphene.Boolean()

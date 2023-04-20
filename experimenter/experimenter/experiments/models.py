@@ -210,7 +210,7 @@ class NimbusExperiment(NimbusConstants, TargetingConstants, FilterMixin, models.
     prevent_pref_conflicts = models.BooleanField(blank=True, null=True, default=False)
 
     is_localized = models.BooleanField(default=False)
-    localized_content = models.TextField(blank=True, null=True)
+    localizations = models.TextField(blank=True, null=True)
 
     objects = NimbusExperimentManager()
 

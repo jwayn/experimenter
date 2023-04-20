@@ -26,6 +26,7 @@ export function useCommonForm<FieldNames extends string>(
     setValue,
     errors,
     control,
+    watch,
     formState: { isSubmitted, isDirty, touched, isValid: isClientValid },
   } = formMethods;
 
@@ -59,5 +60,6 @@ export function useCommonForm<FieldNames extends string>(
     isSubmitted,
     formMethods,
     control,
+    watch
   };
 }

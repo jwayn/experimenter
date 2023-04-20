@@ -56,7 +56,7 @@ FAKER_JSON_SCHEMA = """\
 }
 """
 
-FAKER_LOCALIZED_CONTENT = """\
+TEST_LOCALIZATIONS = """\
 {
     "en-US": {
         "bar": "en-US text",
@@ -353,7 +353,7 @@ class NimbusExperimentFactory(factory.django.DjangoModelFactory):
     risk_revenue = factory.LazyAttribute(lambda o: random.choice([True, False]))
     risk_brand = factory.LazyAttribute(lambda o: random.choice([True, False]))
     is_localized = factory.LazyAttribute(lambda o: False)
-    localized_content = factory.LazyAttribute(lambda o: FAKER_LOCALIZED_CONTENT)
+    localizations = factory.LazyAttribute(lambda o: None)
 
     class Meta:
         model = NimbusExperiment

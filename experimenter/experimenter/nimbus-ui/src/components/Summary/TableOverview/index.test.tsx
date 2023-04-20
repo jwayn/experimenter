@@ -212,7 +212,7 @@ describe("renders localization row as expected", () => {
   it("when set", () => {
     const { experiment } = mockExperimentQuery("demo-slug", {
       isLocalized: true,
-      localizedContent: "test",
+      localizations: "test",
     });
     render(<Subject {...{ experiment }} />);
     expect(
@@ -223,7 +223,7 @@ describe("renders localization row as expected", () => {
   it("when isLocalized checked with no localized content set", () => {
     const { experiment } = mockExperimentQuery("demo-slug", {
       isLocalized: true,
-      localizedContent: null,
+      localizations: null,
     });
     render(<Subject {...{ experiment }} />);
     expect(screen.queryByTestId("experiment-localized-projects")).toBeNull();
@@ -232,7 +232,7 @@ describe("renders localization row as expected", () => {
   it("when isLocalized is not checked and localized content is set", () => {
     const { experiment } = mockExperimentQuery("demo-slug", {
       isLocalized: false,
-      localizedContent: "test",
+      localizations: "test",
     });
     render(<Subject {...{ experiment }} />);
     expect(screen.queryByTestId("experiment-localized-projects")).toBeNull();
@@ -241,11 +241,11 @@ describe("renders localization row as expected", () => {
   it("renders show button for localized content", () => {
     const { experiment } = mockExperimentQuery("demo-slug", {
       isLocalized: true,
-      localizedContent: "test",
+      localizations: "test",
     });
     render(<Subject {...{ experiment }} />);
-    const localizedContent = screen.getByTestId("experiment-localized-content");
-    expect(localizedContent).toHaveTextContent("test");
+    const localizations = screen.getByTestId("experiment-localized-content");
+    expect(localizations).toHaveTextContent("test");
     screen.getByTestId("experiment-localized-content-show-more");
     fireEvent.click(
       screen.getByTestId("experiment-localized-content-show-more"),

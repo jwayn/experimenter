@@ -2,7 +2,7 @@ import json
 import typing
 from collections import defaultdict
 from dataclasses import dataclass
-from importlib.resources import files
+from django.conf import settings
 
 import jsonschema
 from django.contrib.auth.models import User
@@ -861,7 +861,7 @@ class NimbusExperimentSerializer(
             "is_rollout",
             "is_sticky",
             "languages",
-            "localized_content",
+            "localizations",
             "locales",
             "name",
             "population_percent",
@@ -1297,7 +1297,7 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
         error_messages={"null": NimbusConstants.ERROR_REQUIRED_QUESTION},
     )
     is_localized = serializers.BooleanField(required=False)
-    localized_content = serializers.CharField(required=False, allow_blank=True)
+    localizations = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = NimbusExperiment
@@ -1538,21 +1538,34 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
 
     def _validate_localization_content(self, data):
         is_localized = data.get("is_localized")
+        application = data.get("application")
+
+        def validate_localizations_field(self, value):
+            try:
+                json.loads(value)
+            except Exception as e:
+                raise serializers.ValidationError({"localizations": f"Invalid JSON: {e}"})
+            return value
+
+        if application != NimbusExperiment.Application.DESKTOP:
+            raise serializers.ValidationError(
+                {"application": "Localized experiments are only support for Firefox Desktop."}
+            )
 
         if not is_localized:
             return data
 
-        localized_content = data.get("localized_content")
+        localizations = data.get("localizations")
         locales = data.get("locales")
         min_version = data.get("firefox_min_version", "")
         if min_version == "" or (
             NimbusExperiment.Version.parse(min_version)
-            < NimbusExperiment.Version.parse(NimbusExperiment.Version.FIREFOX_113)
+            < NimbusExperiment.Version.parse(NimbusConstants.LANGUAGES_APPLICATION_SUPPORTED_VERSION[application])
         ):
             raise serializers.ValidationError(
                 {
                     "firefox_min_version": [
-                        "Firefox version must not be < 113 for localized experiments."
+                        NimbusConstants.ERROR_DESKTOP_LOCALIZATION_VERSION_MIN
                     ],
                 }
             )
@@ -1561,35 +1574,26 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
                 {"locales": "Locales must not be empty for a localized experiment."}
             )
 
-        locales = [locale.code for locale in locales]
+        locale_codes = [locale.code for locale in locales]
 
-        try:
-            json_content = json.loads(localized_content)
-        except Exception as e:
-            raise serializers.ValidationError({"localized_content": f"Invalid JSON: {e}"})
+        validate_localizations_field(self, localizations)
+        json_content = json.loads(localizations)
 
-        path = (
-            files("mozilla_nimbus_shared")
-            / "schemas"
-            / "experiments"
-            / "NimbusExperiment.json"
-        )
-        schema = json.loads(path.read_text())
-        schema = schema["definitions"]["NimbusExperiment"]["properties"]["localizations"]
+        schema = settings.LOCALIZATIONS_SCHEMA;
 
-        if is_localized and localized_content:
+        if is_localized and localizations:
             try:
                 jsonschema.validate(json_content, schema)
             except Exception as e:
                 raise serializers.ValidationError(
-                    {"localized_content": f"Localization schema error: {e}"}
+                    {"localizations": f"Localization schema error: {e}"}
                 )
 
-            for locale in locales:
+            for locale in locale_codes:
                 if locale not in json_content:
                     raise serializers.ValidationError(
                         {
-                            "localized_content": (
+                            "localizations": (
                                 f"Experiment locale {locale} not present "
                                 f"in localizations."
                             )
@@ -1597,10 +1601,10 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
                     )
 
             for localization in json_content:
-                if localization not in locales:
+                if localization not in locale_codes:
                     raise serializers.ValidationError(
                         {
-                            "localized_content": (
+                            "localizations": (
                                 f"Localization locale {localization} "
                                 f"does not exist in experiment locales."
                             )

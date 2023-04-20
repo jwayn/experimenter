@@ -50,8 +50,8 @@ type NimbusExperimentType {
   takeawaysSummary: String
   isFirstRun: Boolean!
   preventPrefConflicts: Boolean
-  isLocalized: Boolean!
-  localizedContent: String
+  isLocalized: Boolean
+  localizations: String
   documentationLinks: [NimbusDocumentationLinkType!]
   changes: [NimbusChangeLogType]
   canArchive: Boolean
@@ -474,7 +474,7 @@ input ExperimentInput {
   isSticky: Boolean
   languages: [String]
   locales: [String]
-  localizedContent: String
+  localizations: String
   name: String
   populationPercent: String
   preventPrefConflicts: Boolean

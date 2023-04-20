@@ -12,10 +12,12 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 from urllib.parse import urljoin
 
+import json
 import sentry_sdk
 from decouple import config
 from django.contrib.admin import ModelAdmin, StackedInline, TabularInline
 from django.db.models import DecimalField, ForeignKey, JSONField, ManyToManyField
+from importlib.resources import files
 from sentry_sdk.integrations.django import DjangoIntegration
 
 for cls in [
@@ -476,3 +478,13 @@ SKIP_REVIEW_ACCESS_CONTROL_FOR_DEV_USER = config(
 # Required to save large experiments in the admin
 DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20mb
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
+
+# Required 
+localizations_path = (
+            files("mozilla_nimbus_shared")
+            / "schemas"
+            / "experiments"
+            / "NimbusExperiment.json"
+        )
+nimbus_experiments_schema = json.loads(localizations_path.read_text())
+LOCALIZATIONS_SCHEMA = nimbus_experiments_schema["definitions"]["NimbusExperiment"]["properties"]["localizations"]

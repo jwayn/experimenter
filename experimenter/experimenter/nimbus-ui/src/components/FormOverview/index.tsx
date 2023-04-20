@@ -30,6 +30,7 @@ import {
 import { optionalBoolString } from "src/lib/utils";
 import { getConfig_nimbusConfig_projects } from "src/types/getConfig";
 import { getExperiment } from "src/types/getExperiment";
+import { NimbusExperimentApplicationEnum } from "src/types/globalTypes";
 
 type FormOverviewProps = {
   isLoading: boolean;
@@ -55,7 +56,7 @@ export const overviewFieldNames = [
   "riskPartnerRelated",
   "projects",
   "isLocalized",
-  "localizedContent",
+  "localizations",
 ] as const;
 
 const selectOptions = (items: SelectIdItems) =>
@@ -91,11 +92,8 @@ const FormOverview = ({
     riskPartnerRelated: optionalBoolString(experiment?.riskPartnerRelated),
     projects: selectOptions(experiment?.projects as SelectIdItems),
     isLocalized: experiment?.isLocalized,
-    localizedContent: experiment?.localizedContent,
+    localizations: experiment?.localizations,
   };
-  const [isLocalized, setIsLocalized] = useState<boolean>(
-    experiment?.isLocalized ?? false,
-  );
 
   const {
     FormErrors,
@@ -110,6 +108,7 @@ const FormOverview = ({
     formMethods,
     control,
     setValue,
+    watch,
   } = useCommonForm<OverviewFieldName>(
     defaultValues,
     isServerValid,
@@ -118,6 +117,8 @@ const FormOverview = ({
     fieldMessages,
     fieldWarnings,
   );
+
+  const isLocalized = watch("isLocalized");
 
   const isArchived =
     experiment?.isArchived != null ? experiment.isArchived : false;
@@ -282,35 +283,33 @@ const FormOverview = ({
               <FormErrors name="publicDescription" />
             </Form.Group>
 
-            <Form.Group id="localizaton">
-              <Form.Group controlId="isLocalized">
-                <Form.Label className="d-flex align-items-center">
-                  Localization
-                </Form.Label>
-                <Form.Check
-                  label="Does this experiment require localization?"
-                  checked={!!isLocalized}
-                  type="checkbox"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setIsLocalized(e.target.checked);
-                  }}
-                  {...formControlAttrs("isLocalized", {}, false)}
-                />
-                <FormErrors name="isLocalized" />
-              </Form.Group>
-              {isLocalized && (
-                <Form.Group controlId="localizedContent" className="mt-2">
-                  <Form.Label>Localized Content</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={5}
-                    placeholder="Localization JSON object"
-                    {...formControlAttrs("localizedContent")}
+            {experiment.application === NimbusExperimentApplicationEnum.DESKTOP && (
+              <Form.Group id="localizaton">
+                <Form.Group controlId="isLocalized">
+                  <Form.Label className="d-flex align-items-center">
+                    Localization
+                  </Form.Label>
+                  <Form.Check
+                    label="Does this experiment require localization?"
+                    type="checkbox"
+                    {...formControlAttrs("isLocalized", {}, false)}
                   />
-                  <FormErrors name="localizedContent" />
+                  <FormErrors name="isLocalized" />
                 </Form.Group>
-              )}
-            </Form.Group>
+                {isLocalized && (
+                  <Form.Group controlId="localizations" className="mt-2">
+                    <Form.Label>Localizations</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={5}
+                      placeholder="Localization JSON object"
+                      {...formControlAttrs("localizations")}
+                    />
+                    <FormErrors name="localizations" />
+                  </Form.Group>
+                )}
+              </Form.Group>
+            )}
 
             <InputRadios
               name="riskRevenue"

@@ -143,7 +143,7 @@ export const GET_EXPERIMENT_QUERY = gql`
       riskPartnerRelated
 
       isLocalized
-      localizedContent
+      localizations
 
       signoffRecommendations {
         qaSignoff
