@@ -523,7 +523,7 @@ describe("FormOverview", () => {
 
     const checkbox = screen.getByTestId("isLocalized");
     fireEvent.click(checkbox);
-    const textField = screen.getByTestId("localizedContent");
+    const textField = screen.getByTestId("localizations");
 
     expect(textField).toBeInTheDocument();
   });
@@ -531,14 +531,14 @@ describe("FormOverview", () => {
   it("renders localized content from experiment", async () => {
     const { experiment } = mockExperimentQuery("boo", {
       isLocalized: true,
-      localizedContent: "This is localized content",
+      localizations: "This is localized content",
     });
 
     render(<Subject {...{ experiment }} />);
     const checkbox = screen.getByTestId("isLocalized") as HTMLInputElement;
-    const textField = screen.getByTestId("localizedContent");
+    const textField = screen.getByTestId("localizations");
 
     expect(checkbox.checked).toEqual(true);
-    expect(textField).toHaveValue(experiment.localizedContent);
+    expect(textField).toHaveValue(experiment.localizations);
   });
 });

@@ -861,7 +861,7 @@ class NimbusExperimentSerializer(
             "is_rollout",
             "is_sticky",
             "languages",
-            "localized_content",
+            "localizations",
             "locales",
             "name",
             "population_percent",
@@ -1297,7 +1297,7 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
         error_messages={"null": NimbusConstants.ERROR_REQUIRED_QUESTION},
     )
     is_localized = serializers.BooleanField(required=False)
-    localized_content = serializers.CharField(required=False, allow_blank=True)
+    localizations = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = NimbusExperiment
@@ -1542,7 +1542,7 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
         if not is_localized:
             return data
 
-        localized_content = data.get("localized_content")
+        localizations = data.get("localizations")
         locales = data.get("locales")
         min_version = data.get("firefox_min_version", "")
         if min_version == "" or (
@@ -1564,9 +1564,9 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
         locales = [locale.code for locale in locales]
 
         try:
-            json_content = json.loads(localized_content)
+            json_content = json.loads(localizations)
         except Exception as e:
-            raise serializers.ValidationError({"localized_content": f"Invalid JSON: {e}"})
+            raise serializers.ValidationError({"localizations": f"Invalid JSON: {e}"})
 
         path = (
             files("mozilla_nimbus_shared")
@@ -1577,19 +1577,19 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
         schema = json.loads(path.read_text())
         schema = schema["definitions"]["NimbusExperiment"]["properties"]["localizations"]
 
-        if is_localized and localized_content:
+        if is_localized and localizations:
             try:
                 jsonschema.validate(json_content, schema)
             except Exception as e:
                 raise serializers.ValidationError(
-                    {"localized_content": f"Localization schema error: {e}"}
+                    {"localizations": f"Localization schema error: {e}"}
                 )
 
             for locale in locales:
                 if locale not in json_content:
                     raise serializers.ValidationError(
                         {
-                            "localized_content": (
+                            "localizations": (
                                 f"Experiment locale {locale} not present "
                                 f"in localizations."
                             )
@@ -1600,7 +1600,7 @@ class NimbusReviewSerializer(serializers.ModelSerializer):
                 if localization not in locales:
                     raise serializers.ValidationError(
                         {
-                            "localized_content": (
+                            "localizations": (
                                 f"Localization locale {localization} "
                                 f"does not exist in experiment locales."
                             )

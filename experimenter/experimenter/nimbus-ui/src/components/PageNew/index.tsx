@@ -50,6 +50,7 @@ const PageNew: React.FunctionComponent<PageNewProps> = () => {
             },
           },
         });
+        console.log(result.data);
         if (!result.data?.createExperiment) {
           throw new Error(SAVE_FAILED_NO_ERROR);
         }
@@ -64,6 +65,7 @@ const PageNew: React.FunctionComponent<PageNewProps> = () => {
         }
         navigate(`${nimbusExperiment!.slug}/edit/overview`);
       } catch (error) {
+        console.log(error)
         setSubmitErrors({ "*": `${SUBMIT_ERROR}` });
       }
     },

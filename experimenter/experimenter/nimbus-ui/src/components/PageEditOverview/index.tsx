@@ -48,7 +48,7 @@ const PageEditOverview: React.FunctionComponent<PageEditOverviewProps> = () => {
         riskPartnerRelated,
         projects,
         isLocalized,
-        localizedContent,
+        localizations,
       }: Record<string, any>,
       next: boolean,
     ) => {
@@ -67,7 +67,7 @@ const PageEditOverview: React.FunctionComponent<PageEditOverviewProps> = () => {
               riskRevenue: optionalStringBool(riskRevenue),
               riskPartnerRelated: optionalStringBool(riskPartnerRelated),
               isLocalized,
-              localizedContent,
+              localizations,
             },
           },
         });

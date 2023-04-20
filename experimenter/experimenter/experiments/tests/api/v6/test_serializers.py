@@ -9,7 +9,7 @@ from experimenter.base.tests.factories import LocaleFactory
 from experimenter.experiments.api.v6.serializers import NimbusExperimentSerializer
 from experimenter.experiments.models import NimbusBranchFeatureValue, NimbusExperiment
 from experimenter.experiments.tests.factories import (
-    FAKER_LOCALIZED_CONTENT,
+    TEST_LOCALIZATIONS,
     NimbusBranchFactory,
     NimbusExperimentFactory,
     NimbusFeatureConfigFactory,
@@ -426,5 +426,5 @@ class TestNimbusExperimentSerializer(TestCase):
 
         self.assertIn("localizations", serializer.data)
         self.assertEquals(
-            serializer.data["localizations"], json.loads(FAKER_LOCALIZED_CONTENT)
+            serializer.data["localizations"], json.loads(TEST_LOCALIZATIONS)
         )

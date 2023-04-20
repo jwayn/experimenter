@@ -1591,14 +1591,14 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
         )
         self.assertTrue(serializer.is_valid(), serializer.errors)
 
-    def test_localized_content_with_invalid_json(self):
+    def test_localizations_with_invalid_json(self):
         locale_en_us = LocaleFactory.create(code="en-US")
         experiment = NimbusExperimentFactory.create_with_lifecycle(
             NimbusExperimentFactory.Lifecycles.CREATED,
             application=NimbusExperiment.Application.DESKTOP,
             locales=[locale_en_us],
             is_localized=True,
-            localized_content="""{"en-US": {"error": "missing quote}}""",
+            localizations="""{"en-US": {"error": "missing quote}}""",
             is_sticky=True,
             firefox_min_version=NimbusExperiment.Version.FIREFOX_113,
         )
@@ -1613,13 +1613,13 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
         )
         self.assertFalse(serializer.is_valid())
 
-        self.assertEqual(list(serializer.errors.keys()), ["localized_content"])
-        self.assertEqual(len(serializer.errors["localized_content"]), 1)
+        self.assertEqual(list(serializer.errors.keys()), ["localizations"])
+        self.assertEqual(len(serializer.errors["localizations"]), 1)
         self.assertTrue(
-            serializer.errors["localized_content"][0].startswith("Invalid JSON: ")
+            serializer.errors["localizations"][0].startswith("Invalid JSON: ")
         )
 
-    def test_localized_content_with_invalid_localization_locales(self):
+    def test_localizations_with_invalid_localization_locales(self):
         locale_en_us = LocaleFactory.create(code="en-US")
         locale_en_ca = LocaleFactory.create(code="en-CA")
         experiment = NimbusExperimentFactory.create_with_lifecycle(
@@ -1628,7 +1628,7 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
             locales=[locale_en_us, locale_en_ca],
             is_sticky=True,
             is_localized=True,
-            localized_content="""{"en-US": {}}""",
+            localizations="""{"en-US": {}}""",
             firefox_min_version=NimbusExperiment.Version.FIREFOX_113,
         )
         serializer = NimbusReviewSerializer(
@@ -1641,13 +1641,13 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
         self.assertEqual(
             serializer.errors,
             {
-                "localized_content": [
+                "localizations": [
                     "Experiment locale en-CA not present in localizations."
                 ]
             },
         )
 
-    def test_localized_content_with_invalid_targeting_locales(self):
+    def test_localizations_with_invalid_targeting_locales(self):
         locale_en_us = LocaleFactory.create(code="en-US")
         experiment = NimbusExperimentFactory.create_with_lifecycle(
             NimbusExperimentFactory.Lifecycles.CREATED,
@@ -1655,7 +1655,7 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
             locales=[locale_en_us],
             is_sticky=True,
             is_localized=True,
-            localized_content="""{"en-US": {}, "en-CA": {}}""",
+            localizations="""{"en-US": {}, "en-CA": {}}""",
             firefox_min_version=NimbusExperiment.Version.FIREFOX_113,
         )
         serializer = NimbusReviewSerializer(
@@ -1668,13 +1668,13 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
         self.assertEqual(
             serializer.errors,
             {
-                "localized_content": [
+                "localizations": [
                     "Localization locale en-CA does not exist in experiment locales.",
                 ]
             },
         )
 
-    def test_localized_content_with_invalid_localization_payload(self):
+    def test_localizations_with_invalid_localization_payload(self):
         locale_en_us = LocaleFactory.create(code="en-US")
         experiment = NimbusExperimentFactory.create_with_lifecycle(
             NimbusExperimentFactory.Lifecycles.CREATED,
@@ -1682,7 +1682,7 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
             locales=[locale_en_us],
             is_sticky=True,
             is_localized=True,
-            localized_content="""{"en-US": []}""",
+            localizations="""{"en-US": []}""",
             firefox_min_version=NimbusExperiment.Version.FIREFOX_113,
         )
         serializer = NimbusReviewSerializer(
@@ -1692,10 +1692,10 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
             context={"user": self.user},
         )
         self.assertFalse(serializer.is_valid())
-        self.assertEqual(list(serializer.errors.keys()), ["localized_content"])
-        self.assertEqual(len(serializer.errors["localized_content"]), 1)
+        self.assertEqual(list(serializer.errors.keys()), ["localizations"])
+        self.assertEqual(len(serializer.errors["localizations"]), 1)
         self.assertTrue(
-            serializer.errors["localized_content"][0].startswith(
+            serializer.errors["localizations"][0].startswith(
                 "Localization schema error: "
             )
         )
@@ -1707,7 +1707,7 @@ class TestNimbusReviewSerializerSingleFeature(TestCase):
             locales=[],
             is_sticky=True,
             is_localized=True,
-            localized_content="""{"en-US": []}""",
+            localizations="""{"en-US": []}""",
             firefox_min_version=NimbusExperiment.Version.FIREFOX_113,
         )
         serializer = NimbusReviewSerializer(

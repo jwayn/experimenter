@@ -817,7 +817,7 @@ class TestNimbusExperimentBySlugQuery(GraphQLTestCase):
                     }
 
                     isLocalized
-                    localizedContent
+                    localizations
                 }
             }
             """,
@@ -895,7 +895,7 @@ class TestNimbusExperimentBySlugQuery(GraphQLTestCase):
                 "jexlTargetingExpression": experiment.targeting,
                 "languages": [{"id": str(language.id), "name": language.name}],
                 "locales": [{"id": str(locale.id), "name": locale.name}],
-                "localizedContent": experiment.localized_content,
+                "localizations": experiment.localizations,
                 "monitoringDashboardUrl": experiment.monitoring_dashboard_url,
                 "name": experiment.name,
                 "owner": {"email": experiment.owner.email},
@@ -1909,7 +1909,7 @@ class TestNimbusExperimentBySlugQuery(GraphQLTestCase):
         experiment_data = content["data"]["experimentBySlug"]
         self.assertEqual(experiment_data["preventPrefConflicts"], True)
 
-    def test_query_localized_content(self):
+    def test_query_localizations(self):
         user_email = "user@example.com"
         en_us_locale = LocaleFactory.create(code="en-US")
         en_ca_locale = LocaleFactory.create(code="en-CA")
@@ -1925,7 +1925,7 @@ class TestNimbusExperimentBySlugQuery(GraphQLTestCase):
             query experimentBySlug($slug: String!) {
                 experimentBySlug(slug: $slug) {
                     isLocalized
-                    localizedContent
+                    localizations
                 }
             }
             """,

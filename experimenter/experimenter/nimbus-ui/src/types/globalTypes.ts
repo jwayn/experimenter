@@ -237,7 +237,7 @@ export interface ExperimentInput {
   isSticky?: boolean | null;
   languages?: (string | null)[] | null;
   locales?: (string | null)[] | null;
-  localizedContent?: string | null;
+  localizations?: string | null;
   name?: string | null;
   populationPercent?: string | null;
   preventPrefConflicts?: boolean | null;

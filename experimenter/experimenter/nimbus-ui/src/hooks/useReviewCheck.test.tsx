@@ -26,7 +26,7 @@ describe("hooks/useReviewCheck", () => {
     risk_brand: [SERVER_ERRORS.NULL_FIELD],
     risk_revenue: [SERVER_ERRORS.NULL_FIELD],
     risk_partner_related: [SERVER_ERRORS.NULL_FIELD],
-    localized_content: [SERVER_ERRORS.NULL_FIELD],
+    localizations: [SERVER_ERRORS.NULL_FIELD],
   };
 
   const pageNames = {
@@ -41,7 +41,7 @@ describe("hooks/useReviewCheck", () => {
     risk_brand: "overview",
     risk_revenue: "overview",
     risk_partner_related: "overview",
-    localized_content: "overview",
+    localizations: "overview",
   };
 
   beforeAll(() => {

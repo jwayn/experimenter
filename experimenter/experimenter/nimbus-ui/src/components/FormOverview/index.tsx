@@ -55,7 +55,7 @@ export const overviewFieldNames = [
   "riskPartnerRelated",
   "projects",
   "isLocalized",
-  "localizedContent",
+  "localizations",
 ] as const;
 
 const selectOptions = (items: SelectIdItems) =>
@@ -91,7 +91,7 @@ const FormOverview = ({
     riskPartnerRelated: optionalBoolString(experiment?.riskPartnerRelated),
     projects: selectOptions(experiment?.projects as SelectIdItems),
     isLocalized: experiment?.isLocalized,
-    localizedContent: experiment?.localizedContent,
+    localizations: experiment?.localizations,
   };
   const [isLocalized, setIsLocalized] = useState<boolean>(
     experiment?.isLocalized ?? false,
@@ -299,15 +299,15 @@ const FormOverview = ({
                 <FormErrors name="isLocalized" />
               </Form.Group>
               {isLocalized && (
-                <Form.Group controlId="localizedContent" className="mt-2">
+                <Form.Group controlId="localizations" className="mt-2">
                   <Form.Label>Localized Content</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={5}
                     placeholder="Localization JSON object"
-                    {...formControlAttrs("localizedContent")}
+                    {...formControlAttrs("localizations")}
                   />
-                  <FormErrors name="localizedContent" />
+                  <FormErrors name="localizations" />
                 </Form.Group>
               )}
             </Form.Group>
